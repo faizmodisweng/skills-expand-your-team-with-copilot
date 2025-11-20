@@ -32,6 +32,40 @@
   --info-light: #d1ecf1;
 }
 
+/* Dark mode color palette */
+body.dark-mode {
+  /* Primary colors */
+  --primary: #3949ab;
+  --primary-light: #6f74dd;
+  --primary-dark: #00227b;
+  --primary-text: #ffffff;
+
+  /* Secondary colors */
+  --secondary: #ff9800;
+  --secondary-light: #ffc947;
+  --secondary-dark: #c66900;
+  --secondary-text: #ffffff;
+
+  /* Neutral colors */
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border: #3a3a3a;
+  --border-light: #2a2a2a;
+  --border-focus: #4a4a4a;
+
+  /* Feedback colors */
+  --success: #4caf50;
+  --success-light: #2d4a2f;
+  --warning: #ff9800;
+  --warning-light: #4a3d1f;
+  --error: #f44336;
+  --error-light: #4a2d2a;
+  --info: #2196f3;
+  --info-light: #1f3a52;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -617,6 +651,32 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Dark mode toggle button */
+#dark-mode-toggle {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: var(--primary-text);
+  transition: background-color 0.2s;
+}
+
+#dark-mode-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-icon {
+  font-size: 1rem;
 }
 
 #user-status {
