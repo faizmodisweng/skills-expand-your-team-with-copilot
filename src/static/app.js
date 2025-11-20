@@ -618,6 +618,23 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="social-share-container">
+        <div class="share-label">Share:</div>
+        <div class="share-buttons">
+          <button class="share-button share-facebook tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share on Facebook">
+            <span class="share-icon">📘</span>
+            <span class="tooltip-text">Share on Facebook</span>
+          </button>
+          <button class="share-button share-twitter tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share on Twitter">
+            <span class="share-icon">🐦</span>
+            <span class="tooltip-text">Share on Twitter</span>
+          </button>
+          <button class="share-button share-link tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Copy link">
+            <span class="share-icon">🔗</span>
+            <span class="tooltip-text">Copy link to clipboard</span>
+          </button>
+        </div>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -651,6 +668,21 @@ document.addEventListener("DOMContentLoaded", () => {
           openRegistrationModal(name);
         });
       }
+    }
+
+    // Add click handlers for share buttons
+    const shareFacebookBtn = activityCard.querySelector(".share-facebook");
+    const shareTwitterBtn = activityCard.querySelector(".share-twitter");
+    const shareLinkBtn = activityCard.querySelector(".share-link");
+
+    if (shareFacebookBtn) {
+      shareFacebookBtn.addEventListener("click", () => handleShareFacebook(name, details.description, formattedSchedule));
+    }
+    if (shareTwitterBtn) {
+      shareTwitterBtn.addEventListener("click", () => handleShareTwitter(name, details.description, formattedSchedule));
+    }
+    if (shareLinkBtn) {
+      shareLinkBtn.addEventListener("click", () => handleShareLink(name));
     }
 
     activitiesList.appendChild(activityCard);
@@ -933,6 +965,48 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  // Handle sharing on Facebook
+  function handleShareFacebook(activityName, description, schedule) {
+    const url = `${window.location.origin}/static/index.html`;
+    const shareText = `Check out ${activityName} at Mergington High School! ${description} - ${schedule}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(shareText)}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+    showMessage('Opening Facebook to share...', 'info');
+  }
+
+  // Handle sharing on Twitter
+  function handleShareTwitter(activityName, description, schedule) {
+    const url = `${window.location.origin}/static/index.html`;
+    const shareText = `Check out ${activityName} at Mergington High School! ${description} - ${schedule}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank', 'width=600,height=400');
+    showMessage('Opening Twitter to share...', 'info');
+  }
+
+  // Handle copying link to clipboard
+  async function handleShareLink(activityName) {
+    const url = `${window.location.origin}/static/index.html`;
+    try {
+      await navigator.clipboard.writeText(url);
+      showMessage(`Link to ${activityName} copied to clipboard!`, 'success');
+    } catch (error) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showMessage(`Link to ${activityName} copied to clipboard!`, 'success');
+      } catch (err) {
+        showMessage('Failed to copy link. Please copy manually.', 'error');
+      }
+      document.body.removeChild(textArea);
+    }
+  }
 
   // Expose filter functions to window for future UI control
   window.activityFilters = {
